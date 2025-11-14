@@ -1,7 +1,6 @@
 ﻿using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using OllamaSharp;
-using System.Net.Sockets;
 using Microsoft.Extensions.Configuration;
 
 Console.WriteLine("Agent Framework + Ollama (phi3:mini) demo");
@@ -10,7 +9,6 @@ Console.WriteLine("Ctrl+C to exit.\n");
 
 var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) => { e.Cancel = true; cts.Cancel(); };
-
 
 GetConfig(out string ollamaUriStr, out string model, out string instructions);
 
@@ -69,11 +67,6 @@ while (!cts.IsCancellationRequested)
     catch (OperationCanceledException)
     {
         break;
-    }
-    catch (HttpRequestException httpEx) when (httpEx.InnerException is SocketException se && se.SocketErrorCode == SocketError.ConnectionRefused)
-    {
-        Console.WriteLine($"\n[Connection Error] {httpEx.Message}\n" +
-                          "Ollama became unreachable. Verify `ollama serve` is still running.\n");
     }
     catch (Exception ex)
     {
