@@ -2,6 +2,7 @@
 using Microsoft.Extensions.AI;
 using OllamaSharp;
 using System.Net.Sockets;
+using Microsoft.Extensions.Configuration;
 
 Console.WriteLine("Agent Framework + Ollama (phi3:mini) demo");
 Console.WriteLine("Ensure Ollama is running: `ollama serve` and model pulled: `ollama pull phi3:mini`.");
@@ -10,9 +11,12 @@ Console.WriteLine("Ctrl+C to exit.\n");
 var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) => { e.Cancel = true; cts.Cancel(); };
 
-var ollamaUri = new Uri("http://localhost:11434/");
 
-var baseClient = new OllamaApiClient(ollamaUri, "phi3:mini");
+GetConfig(out string ollamaUriStr, out string model, out string instructions);
+
+var ollamaUri = new Uri(ollamaUriStr);
+
+var baseClient = new OllamaApiClient(ollamaUri, model);
 
 IChatClient chatClient = ((IChatClient)baseClient)
     .AsBuilder()
@@ -20,7 +24,7 @@ IChatClient chatClient = ((IChatClient)baseClient)
 
 var agent = new ChatClientAgent(
     chatClient,
-    instructions: "You are a concise assistant. Keep answers short unless asked to elaborate.");
+    instructions: instructions);
 
 List<ChatMessage> history = new();
 
@@ -78,3 +82,16 @@ while (!cts.IsCancellationRequested)
 }
 
 Console.WriteLine("\nDone.");
+
+static void GetConfig(out string ollamaUriStr, out string model, out string instructions)
+{
+    var config = new ConfigurationBuilder()
+        .SetBasePath(AppContext.BaseDirectory)
+        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+        .AddEnvironmentVariables(prefix: "APP__")
+        .Build();
+
+    ollamaUriStr = config["Ollama:Uri"]??string.Empty;
+    model = config["Ollama:Model"] ?? string.Empty;
+    instructions = config["Agent:Instructions"] ?? string.Empty;
+}
