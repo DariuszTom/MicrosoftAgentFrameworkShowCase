@@ -7,10 +7,6 @@ Minimal console sample using `Microsoft.Agents.AI`, `Microsoft.Extensions.AI` an
 - Ollama installed (https://ollama.com)
 - Model pulled locally: `ollama pull phi3:mini`
 
-## Project Setup
-Add package references (if not already present):
-
-
 ## Streaming Output
 Responses stream token-by-token; collected updates are converted to a final `AgentRunResponse` and assistant messages appended to history.
 
