@@ -7,7 +7,7 @@ GetConfig(out string ollamaUriStr, out string model, out string instructions);
 
 Console.WriteLine($"Agent Framework + Ollama ({model}) demo");
 Console.WriteLine($"Ensure Ollama is running: `ollama serve` and model pulled: `ollama pull {model}.");
-Console.WriteLine("Ctrl+C to exit.\n");
+Console.WriteLine($"Ctrl+C to exit{Environment.NewLine}");
 
 var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) => { e.Cancel = true; cts.Cancel(); };
@@ -69,7 +69,7 @@ while (!cts.IsCancellationRequested)
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"\n[Error] {ex.Message}\n");
+        Console.WriteLine($"{Environment.NewLine}[Error] {ex.Message}{Environment.NewLine}");
     }
 }
 
