@@ -1,4 +1,4 @@
-# Agent Framework + Ollama Demo (.NET 9 / C# 13)
+# Agent Framework + Ollama Demo (.NET 10/ C# 13)
 
 Minimal console sample using `Microsoft.Agents.AI`, `Microsoft.Extensions.AI` and `OllamaSharp` to run a streaming chat agent against the local Ollama `phi3:mini` model.
 
