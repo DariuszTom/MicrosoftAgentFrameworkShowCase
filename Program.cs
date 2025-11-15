@@ -3,17 +3,16 @@ using Microsoft.Extensions.AI;
 using OllamaSharp;
 using Microsoft.Extensions.Configuration;
 
-Console.WriteLine("Agent Framework + Ollama (phi3:mini) demo");
-Console.WriteLine("Ensure Ollama is running: `ollama serve` and model pulled: `ollama pull phi3:mini`.");
+GetConfig(out string ollamaUriStr, out string model, out string instructions);
+
+Console.WriteLine($"Agent Framework + Ollama ({model}) demo");
+Console.WriteLine($"Ensure Ollama is running: `ollama serve` and model pulled: `ollama pull {model}.");
 Console.WriteLine("Ctrl+C to exit.\n");
 
 var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) => { e.Cancel = true; cts.Cancel(); };
 
-GetConfig(out string ollamaUriStr, out string model, out string instructions);
-
 var ollamaUri = new Uri(ollamaUriStr);
-
 var baseClient = new OllamaApiClient(ollamaUri, model);
 
 IChatClient chatClient = ((IChatClient)baseClient)
