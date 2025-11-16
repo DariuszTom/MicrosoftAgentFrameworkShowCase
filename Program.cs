@@ -73,7 +73,7 @@ while (!cts.IsCancellationRequested)
     }
 }
 
-Console.WriteLine("\nDone.");
+Console.WriteLine($"{Environment.NewLine}Done.");
 
 static void GetConfig(out string ollamaUriStr, out string model, out string instructions)
 {
