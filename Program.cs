@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 GetConfig(out string ollamaUriStr, out string model, out string instructions);
 
 Console.WriteLine($"Agent Framework + Ollama ({model}) demo");
-Console.WriteLine($"Ensure Ollama is running: `ollama serve` and model pulled: `ollama pull {model}.");
+Console.WriteLine($"Ensure Ollama is running: `ollama server` and model pulled: ollama:{model}.");
 Console.WriteLine($"Ctrl+C to exit{Environment.NewLine}");
 
 var cts = new CancellationTokenSource();
@@ -52,16 +52,8 @@ while (!cts.IsCancellationRequested)
         Console.WriteLine();
 
         AgentRunResponse response = updates.ToAgentRunResponse();
-        if (response.Messages != null)
-        {
-            foreach (var m in response.Messages)
-            {
-                if (m.Role == ChatRole.Assistant)
-                {
-                    history.Add(m);
-                }
-            }
-        }
+
+        history.AddRange(response.Messages.Where(m => m.Role == ChatRole.Assistant));
     }
     catch (OperationCanceledException)
     {
